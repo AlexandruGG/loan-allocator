@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class LoanAllocatorApplication
 
 fun main(args: Array<String>) {
-	runApplication<LoanAllocatorApplication>(*args)
+    runApplication<LoanAllocatorApplication>(*args)
 }
