@@ -1,7 +1,7 @@
 package com.alexg.loanallocator.entity
 
 import com.alexg.loanallocator.enum.LoanCategory
-import com.alexg.loanallocator.enum.RiskBand
+import com.alexg.loanallocator.enum.LoanRiskBand
 import com.alexg.loanallocator.repository.LoanRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ class BasicEntityTest(@Autowired private val loanRepository: LoanRepository) {
 
     @Test
     fun `basic entity checks`() {
-        val loan = Loan(category = LoanCategory.PROPERTY, riskBand = RiskBand.A, amount = BigDecimal.valueOf(1000))
+        val loan = Loan(category = LoanCategory.PROPERTY, riskBand = LoanRiskBand.A, amount = BigDecimal(1000))
         val hashCodeBefore = loan.hashCode()
         val personSet = hashSetOf(loan)
 

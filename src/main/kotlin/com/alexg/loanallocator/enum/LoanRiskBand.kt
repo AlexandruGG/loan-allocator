@@ -1,5 +1,5 @@
 package com.alexg.loanallocator.enum
 
-enum class RiskBand {
+enum class LoanRiskBand {
     A_PLUS, A, B, C, D, E
 }
