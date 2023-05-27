@@ -1,34 +1,38 @@
 package com.alexg.loanallocator.service
 
+import com.alexg.loanallocator.entity.Investor
 import com.alexg.loanallocator.entity.Loan
 import com.alexg.loanallocator.repository.LoanRepository
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.util.UUID
 
 @Service
 class LoanAllocator(val investorService: InvestorService, val loanRepository: LoanRepository) {
 
-    fun allocate(): Map<UUID, Set<Loan>> {
+    fun allocate(): Map<Investor, Set<Loan>> {
         val loans = loanRepository.findAll()
-        val investors = investorService.getInvestors()
+        val investors = investorService
+            .getInvestors()
+            .sortedBy { investor -> loans.count { loan -> investor.matches(loan) } }
 
-        return investors.associate {
+        return investors.associate { investor ->
             val allocatedLoans = mutableSetOf<Loan>()
 
             loans.forEach { loan ->
-                if (it.funds <= BigDecimal.ZERO) {
+                if (investor.funds <= BigDecimal.ZERO) {
                     return@forEach
                 }
 
-                if (it.fitsLoan(loan)) {
+                if (investor.matches(loan)) {
                     allocatedLoans.add(loan)
-                    it.funds -= loan.amount
+                    investor.funds -= loan.amount
+                    investor.currentAllocation.add(loan)
                 }
             }
+
             loans.removeAll(allocatedLoans)
 
-            it.id to allocatedLoans
+            investor to allocatedLoans
         }
     }
 }
